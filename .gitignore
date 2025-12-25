@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/
+ENV/
+.env
+
+# Python Caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Data and Outputs
+data/
+outputs/
+*.gpickle
+*.json
+!dataset_metadata.json
+!graphs_metadata.json
+
+# IDEs
+.vscode/
+.idea/
+
+# OS Files
+.DS_Store
+Thumbs.db

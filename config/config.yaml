@@ -1,0 +1,58 @@
+# Graph Generation Parameters
+generation:
+  num_train_graphs: 800
+  num_val_graphs: 100
+  num_test_graphs: 100
+  
+  # Phase 1: Temporal Backbone
+  num_sessions: 50
+  avg_chain_length: 10
+  chain_length_std: 3
+  
+  # Phase 2: Entity Hubs
+  num_entities: 100
+  zipf_alpha: 1.5
+  mentions_per_event_min: 1
+  mentions_per_event_max: 5
+  
+  # Phase 3: Causal Wiring
+  causal_prob_base: 0.05
+  causal_boost_shared_entity: 3.0
+  max_causal_distance: 10
+
+# Feature Engineering
+features:
+  degree_buckets: [0, 2, 5, 10, 20, 50, 100]
+  rwpe_walk_length: 16
+  rwpe_num_walks: 100
+
+# Model Architecture
+model:
+  input_dim: 26  # 7 + 3 + 16
+  hidden_dims: [128, 256]
+  output_dim: 256
+  aggregator: 'max'  # or 'mean'
+  dropout: 0.1
+
+# Training
+training:
+  batch_size: 64
+  learning_rate: 0.0005
+  weight_decay: 0.0001
+  epochs: 50
+  
+  # Curriculum Learning
+  curriculum_phases:
+    - epochs: [0, 10]    # Phase 1: Chains only
+    - epochs: [10, 20]   # Phase 2: + Entities
+    - epochs: [20, 50]   # Phase 3: + Causality
+  
+  # Negative Sampling
+  num_neg_samples: 5
+  hard_negative_ratio: 0.8
+
+# Evaluation
+evaluation:
+  role_classifier_epochs: 20
+  tsne_perplexity: 30
+  metrics: ['auc', 'accuracy', 'precision@k']
