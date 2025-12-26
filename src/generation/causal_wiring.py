@@ -529,8 +529,8 @@ def visualize_with_causality(G: nx.DiGraph, max_nodes: int = 80):
 
 if __name__ == "__main__":
     # Import previous phases
-    from backbone_generator import TemporalBackboneGenerator, BackboneConfig
-    from entity_injector import EntityInjector, EntityConfig
+    from .backbone_generator import TemporalBackboneGenerator, BackboneConfig
+    from .entity_injector import EntityInjector, EntityConfig
     
     print("=" * 70)
     print("CAUSAL WIRING - PHASE 3 DEMO")

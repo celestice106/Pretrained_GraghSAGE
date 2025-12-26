@@ -22,9 +22,9 @@ import argparse
 from datetime import datetime
 
 # Import all phase generators
-from backbone_generator import TemporalBackboneGenerator, BackboneConfig
-from entity_injector import EntityInjector, EntityConfig
-from causal_wiring import CausalWiring, CausalConfig
+from .backbone_generator import TemporalBackboneGenerator, BackboneConfig
+from .entity_injection import EntityInjector, EntityConfig
+from .causal_wiring import CausalWiring, CausalConfig
 
 
 @dataclass

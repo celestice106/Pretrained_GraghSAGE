@@ -403,7 +403,7 @@ def visualize_with_entities(G: nx.DiGraph, max_nodes: int = 100):
 
 if __name__ == "__main__":
     # Must import Phase 1 generator
-    from backbone_generator import TemporalBackboneGenerator, BackboneConfig
+    from .backbone_generator import TemporalBackboneGenerator, BackboneConfig
     
     print("=" * 70)
     print("ENTITY INJECTOR - PHASE 2 DEMO")
