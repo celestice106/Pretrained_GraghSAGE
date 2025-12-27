@@ -91,6 +91,9 @@ class EntityInjector:
         if self.config.ensure_connectivity:
             self._ensure_connectivity(G, entities)
         
+        # Step 4: Remove isolated entities
+        self._remove_isolated_entities(G)
+
         # Update metadata
         G.graph['generation_phase'] = 2
         G.graph['metadata']['num_entities'] = len(entities)
@@ -132,13 +135,26 @@ class EntityInjector:
             entities.append((entity_id, weights[i]))
         
         return entities
-    
+
+    def _remove_isolated_entities(self, G: nx.DiGraph):
+        """
+        Remove entity nodes with degree 0.
+        """
+        entity_nodes = [n for n in G.nodes() if G.nodes[n].get('node_type') == 'Entity']
+        isolated = [n for n in entity_nodes if G.degree(n) == 0]
+        
+        if isolated:
+            G.remove_nodes_from(isolated)
+        print(f"  Removed {len(isolated)} isolated entities")
+
     def _create_mentions_edges(
         self,
         G: nx.DiGraph,
         entities: List[Tuple[str, float]]
     ):
         """
+        Guarantee entity coverage.
+        
         For each MemoryEntry:
         1. Sample k entities (k ~ Uniform[min, max])
         2. Sample entities based on popularity weights
@@ -157,6 +173,10 @@ class EntityInjector:
             node for node in G.nodes()
             if G.nodes[node].get('node_type') == 'MemoryEntry'
         ]
+        
+        # Track which entities have been mentioned
+        mentioned_entities = set()
+        used_entities = set()
         
         # For each MemoryEntry, create MENTIONS edges
         for memory_node in memory_nodes:
@@ -186,6 +206,20 @@ class EntityInjector:
                 
                 # Update entity degree counter
                 G.nodes[entity_id]['degree'] += 1
+                used_entities.add(entity_id)
+        
+        unused_entities = set(entity_ids) - used_entities
+        if unused_entities and memory_nodes:
+            # Sample one unused entity to connect to all memory nodes
+            for unused_entity in unused_entities:
+                random_memory = np.random.choice(memory_nodes)
+                G.add_edge(
+                    random_memory,
+                    unused_entity,
+                    edge_type='MENTIONS',
+                    weight=1.0
+                )
+                G.nodes[unused_entity]['degree'] += 1
     
     def _ensure_connectivity(
         self,

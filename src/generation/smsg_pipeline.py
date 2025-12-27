@@ -51,8 +51,8 @@ class SMSGConfig:
     num_entities_max: int = 200
     zipf_alpha_min: float = 1.0
     zipf_alpha_max: float = 2.0
-    mentions_per_event_min: int = 1
-    mentions_per_event_max: int = 5
+    mentions_per_event_min: int = 2
+    mentions_per_event_max: int = 6
     
     # Phase 3: Causality
     causal_prob_base_min: float = 0.01
